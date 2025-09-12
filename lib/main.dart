@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_tech_task/presentation/home/screens/home_screen.dart';
+import 'package:flutter_tech_task/presentation/posts/screens/post_details_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,130 +10,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: 'list/',
-        routes: <String, WidgetBuilder>{
-          'list/': (BuildContext context) => const ListPage(),
-          'details/': (BuildContext context) => const DetailsPage(),
-        },
-      );
-}
-
-class ListPage extends StatefulWidget {
-  const ListPage({super.key});
-
-  @override
-  State<ListPage> createState() => _ListPageState();
-}
-
-class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
-
-  @override
-  State<DetailsPage> createState() => _DetailsPageState();
-}
-
-class _DetailsPageState extends State<DetailsPage> {
-  dynamic post;
-
-  @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic>? args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-
-    return FutureBuilder<dynamic>(
-      future: http.get(
-        Uri.parse(
-          'https://jsonplaceholder.typicode.com/posts/${args?['id']}',
-        ),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-      builder: (post, response) {
-        if (response.hasData) {
-          final dynamic data = json.decode(response.data!.body);
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Post details'),
-            ),
-            body: Container(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    data['title'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Container(height: 10),
-                  Text(data['body'], style: const TextStyle(fontSize: 16)),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return Container();
-        }
+      initialRoute: 'home/',
+      routes: <String, WidgetBuilder>{
+        'home/': (context) => const ListPage(),
+        'details/': (context) => const DetailsPage(),
       },
     );
   }
-}
-
-class _ListPageState extends State<ListPage> {
-  List<dynamic> posts = <dynamic>[];
-
-  @override
-  void initState() {
-    super.initState();
-    http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/'))
-        .then((http.Response response) {
-      setState(() {
-        posts = json.decode(response.body);
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('List of posts'),
-        ),
-        body: ListView(
-          children: posts
-              .map(
-                (post) => InkWell(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(
-                      'details/',
-                      arguments: <String, dynamic>{'id': post['id']},
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          post['title'],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(post['body']),
-                        Container(height: 10),
-                        const Divider(
-                          thickness: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      );
 }
