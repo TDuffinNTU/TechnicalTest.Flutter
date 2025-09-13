@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tech_task/presentation/comments/screens/comment_screen.dart';
 import 'package:flutter_tech_task/presentation/home/screens/home_screen.dart';
 import 'package:flutter_tech_task/presentation/posts/screens/post_details_screen.dart';
 
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         'home/': (context) => const HomeScreen(),
         'details/': (context) => const DetailsPage(),
+        'comments/': (context) => const CommentScreen(),
       },
     );
   }

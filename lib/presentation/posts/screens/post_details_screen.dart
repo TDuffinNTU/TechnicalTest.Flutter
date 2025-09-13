@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tech_task/presentation/posts/widgets/comment_button.dart';
+import 'package:flutter_tech_task/service/comments/comment.dart';
 import 'package:flutter_tech_task/service/comments/comment_service.dart';
 import 'package:flutter_tech_task/service/posts/post.dart';
 
@@ -11,6 +12,9 @@ class DetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Get the tapped post from the previous route.
     final Post post = ModalRoute.of(context)!.settings.arguments as Post;
+    final AsyncValue<List<Comment>> commentFuture = ref.watch(
+      commentServiceProvider(post.id),
+    );
 
     return Scaffold(
       appBar: AppBar(title: const Text('Post details')),
@@ -28,13 +32,16 @@ class DetailsPage extends ConsumerWidget {
                 ),
               ),
             ),
+            Divider(height: 1),
             SizedBox(height: 10),
             Text(post.body, style: const TextStyle(fontSize: 16)),
             Align(
               alignment: AlignmentGeometry.centerRight,
               child: CommentButton(
-                future: ref.watch(commentServiceProvider(post.id)),
-                onPressed: () {},
+                future: commentFuture,
+                onPressed: () => Navigator.of(
+                  context,
+                ).pushNamed('comments/', arguments: commentFuture.requireValue),
               ),
             ),
           ],
