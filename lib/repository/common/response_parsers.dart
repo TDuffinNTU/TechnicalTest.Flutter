@@ -1,12 +1,13 @@
 /// Parse the response of an API Request (List of dynamic) into an object's
 /// fromJson() method.
 List<T> parseListResponse<T>(
-  List<dynamic> data,
+  Map<String, dynamic> data,
+  T Function(Map<String, dynamic>) fromJson,
+) => (data['data'] as List<dynamic>).map((e) => fromJson(e)).toList();
+
+T parseSingleResponse<T>(
+  Map<String, dynamic> data,
   T Function(Map<String, dynamic>) fromJson,
 ) {
-  List<T> result = [];
-  for (final item in data) {
-    result.add(fromJson(item as Map<String, dynamic>));
-  }
-  return result;
+  return fromJson(data['data']);
 }

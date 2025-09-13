@@ -7,9 +7,9 @@ final Dio _dio = Dio(
 /// Common API methods, implemented with [Dio].
 /// Wrapped for mocking in mockito.
 class ApiClient {
-  Future<List<dynamic>> getRequest(String path, CancelToken? ct) async {
-    final response = await _dio.get<List<dynamic>>(path);
-    return List.castFrom<dynamic, Map<String, dynamic>>(response.data!);
+  Future<Map<String, dynamic>> getRequest(String path, CancelToken? ct) async {
+    final response = await _dio.get(path);
+    return {'data': response.data!};
   }
 
   // Imagine there are post/put/patch etc. here!
