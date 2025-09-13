@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_tech_task/repository/comments/comment.dart';
 import 'package:flutter_tech_task/repository/common/api_client.dart';
 import 'package:flutter_tech_task/repository/common/response_parsers.dart';
+import 'package:flutter_tech_task/repository/posts/post.dart';
 
 /// JsonPlaceholder API Controller.
 class ApiController {
@@ -15,5 +16,11 @@ class ApiController {
     final data = await client.getRequest('/post/$postId/comments', ct);
 
     return parseListResponse<Comment>(data, (json) => Comment.fromJson(json));
+  }
+
+  Future<List<Post>> getPosts(CancelToken? ct, {required String postId}) async {
+    final data = await client.getRequest('/post/$postId', ct);
+
+    return parseListResponse(data, (json) => Post.fromJson(json));
   }
 }

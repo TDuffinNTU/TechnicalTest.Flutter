@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../utils/responses/responses.dart';
+import '../utils/responses/example_responses.dart';
 
 import 'api_client_test.mocks.dart';
 
@@ -30,4 +30,6 @@ void main() {
 
     expect(data, equals(comments));
   });
+
+  test('GET post/id success', () async {});
 }

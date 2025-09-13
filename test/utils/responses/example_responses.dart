@@ -7,5 +7,7 @@ const getAllPostsSuccessJson = 'all_posts_success';
 
 final dir = '${Directory.current.path}/test/utils/responses/';
 
-List<dynamic> getExampleResponse(String filename) =>
-    jsonDecode(File('$dir/$filename.json').readAsStringSync());
+List<Map<String, dynamic>> getExampleResponse(String filename) =>
+    List.castFrom<dynamic, Map<String, dynamic>>(
+      jsonDecode(File('$dir/$filename.json').readAsStringSync()),
+    );
