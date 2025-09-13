@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: 'home/',
       routes: <String, WidgetBuilder>{
-        'home/': (context) => const ListPage(),
+        'home/': (context) => const HomeScreen(),
         'details/': (context) => const DetailsPage(),
       },
     );
