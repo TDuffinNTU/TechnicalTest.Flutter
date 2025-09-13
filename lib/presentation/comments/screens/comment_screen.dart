@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tech_task/presentation/comments/widgets/comment_list_item.dart';
 import 'package:flutter_tech_task/service/comments/comment.dart';
 
 class CommentScreen extends ConsumerWidget {
@@ -13,7 +14,7 @@ class CommentScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Comments')),
       body: ListView(
-        children: comments.map((e) => Card(child: Text(e.name))).toList(),
+        children: comments.map((e) => CommentListItem(comment: e)).toList(),
       ),
     );
   }

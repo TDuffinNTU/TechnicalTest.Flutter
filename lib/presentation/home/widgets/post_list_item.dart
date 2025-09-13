@@ -21,7 +21,7 @@ class PostListItem extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(post.body),
-            Container(height: 10),
+            SizedBox(height: 10),
             const Divider(thickness: 1, color: Colors.grey),
           ],
         ),

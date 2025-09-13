@@ -12,7 +12,6 @@ class CommentService extends _$CommentService
     with MapperMixin<Comment, CommentModel> {
   @override
   FutureOr<List<Comment>> build(int postId) async {
-    await Future.delayed(Duration(seconds: 3));
     final List<CommentModel> comments = await ApiController(
       client: ApiClient(),
     ).getComments(postId: postId);
