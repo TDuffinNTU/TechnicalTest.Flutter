@@ -32,6 +32,7 @@
 /build/
 *.g.dart
 *.freezed.dart
+*.mocks.dart
 
 # Web related
 lib/generated_plugin_registrant.dart
