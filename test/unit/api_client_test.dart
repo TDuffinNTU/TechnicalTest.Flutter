@@ -1,8 +1,8 @@
-import 'package:flutter_tech_task/repository/comments/comment.dart';
-import 'package:flutter_tech_task/repository/common/api_controller.dart';
-import 'package:flutter_tech_task/repository/common/api_client.dart';
+import 'package:flutter_tech_task/repository/models/comments/comment_model.dart';
+import 'package:flutter_tech_task/repository/data_sources/database/api_controller.dart';
+import 'package:flutter_tech_task/repository/data_sources/database/api_client.dart';
 import 'package:flutter_tech_task/repository/common/response_parsers.dart';
-import 'package:flutter_tech_task/repository/posts/post.dart';
+import 'package:flutter_tech_task/repository/models/posts/post_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -29,13 +29,13 @@ void main() {
         mockApiClient.getRequest(argThat(contains('posts')), any),
       ).thenAnswer((_) async => commentsResponse);
 
-      final comments = parseListResponse<Comment>(
+      final comments = parseListResponse<CommentModel>(
         commentsResponse,
-        Comment.fromJson,
+        CommentModel.fromJson,
       );
 
       final controller = ApiController(client: mockApiClient);
-      final data = await controller.getComments(null, postId: '1');
+      final data = await controller.getComments(postId: 1);
 
       expect(data, equals(comments));
     });
@@ -53,19 +53,22 @@ void main() {
     });
 
     test('GET post/id success', () async {
-      final singlePost = parseSingleResponse(singlePostResponse, Post.fromJson);
+      final singlePost = parseSingleResponse(
+        singlePostResponse,
+        PostModel.fromJson,
+      );
 
       final controller = ApiController(client: mockApiClient);
-      final result = await controller.getSinglePost(null, postId: '1');
+      final result = await controller.getSinglePost(postId: 1);
 
       expect(result, equals(singlePost));
     });
 
     test('GET posts success', () async {
-      final allPosts = parseListResponse(allPostsResponse, Post.fromJson);
+      final allPosts = parseListResponse(allPostsResponse, PostModel.fromJson);
 
       final controller = ApiController(client: mockApiClient);
-      final result = await controller.getAllPosts(null);
+      final result = await controller.getAllPosts();
 
       expect(result, equals(allPosts));
     });
