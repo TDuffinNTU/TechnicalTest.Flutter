@@ -22,6 +22,8 @@ dependencies:
   json_serializable: ^6.11.1
   riverpod_annotation: ^3.0.0-dev.17
   sembast: ^3.8.5+1
+  dio: ^5.9.0
+  mockito: ^5.5.0
 
 dev_dependencies:
   flutter_test:
