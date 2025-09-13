@@ -24,6 +24,7 @@ dependencies:
   sembast: ^3.8.5+1
   dio: ^5.9.0
   mockito: ^5.5.0
+  loading_animation_widget: ^1.3.0
 
 dev_dependencies:
   flutter_test:

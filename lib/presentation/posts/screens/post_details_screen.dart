@@ -1,57 +1,45 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_tech_task/presentation/posts/widgets/comment_button.dart';
+import 'package:flutter_tech_task/service/comments/comment_service.dart';
+import 'package:flutter_tech_task/service/posts/post.dart';
 
-class DetailsPage extends StatefulWidget {
+class DetailsPage extends ConsumerWidget {
   const DetailsPage({super.key});
 
   @override
-  State<DetailsPage> createState() => _DetailsPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get the tapped post from the previous route.
+    final Post post = ModalRoute.of(context)!.settings.arguments as Post;
 
-class _DetailsPageState extends State<DetailsPage> {
-  dynamic post;
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, dynamic>? args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-
-    return FutureBuilder<dynamic>(
-      future: http.get(
-        Uri.parse(
-          'https://jsonplaceholder.typicode.com/posts/${args?['id']}',
-        ),
-      ),
-      builder: (post, response) {
-        if (response.hasData) {
-          final dynamic data = json.decode(response.data!.body);
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Post details'),
-            ),
-            body: Container(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    data['title'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Container(height: 10),
-                  Text(data['body'], style: const TextStyle(fontSize: 16)),
-                ],
+    return Scaffold(
+      appBar: AppBar(title: const Text('Post details')),
+      body: Container(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: <Widget>[
+            Align(
+              alignment: AlignmentGeometry.topLeft,
+              child: Text(
+                post.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
-          );
-        } else {
-          return Container();
-        }
-      },
+            SizedBox(height: 10),
+            Text(post.body, style: const TextStyle(fontSize: 16)),
+            Align(
+              alignment: AlignmentGeometry.centerRight,
+              child: CommentButton(
+                future: ref.watch(commentServiceProvider(post.id)),
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

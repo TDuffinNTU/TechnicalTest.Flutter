@@ -20,10 +20,9 @@ class HomeScreen extends ConsumerWidget {
                     .map(
                       (post) => InkWell(
                         onTap: () {
-                          Navigator.of(context).pushNamed(
-                            'details/',
-                            arguments: <String, int>{'id': post.id},
-                          );
+                          Navigator.of(
+                            context,
+                          ).pushNamed('details/', arguments: post);
                         },
                         child: Container(
                           padding: const EdgeInsets.only(left: 10, right: 10),
