@@ -1,0 +1,67 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Flutter pub get",
+            "detail": "Get flutter dependencies",
+            "type": "flutter",
+            "command": "flutter",
+            "args": [
+                "pub",
+                "get"
+            ],
+            "problemMatcher": [],
+            "group": "none",
+            "isBackground": true,
+            "presentation": {
+                "echo": false,
+                "reveal": "never",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+        },
+        {
+            "label": "Build",
+            "detail": "Runs the build_runner",
+            "type": "shell",
+            "command": "./scripts/build.sh",
+            "problemMatcher": [
+                "$dart-build_runner"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "Flutter pub get"
+            ],
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+        },
+        {
+            "label": "Analyze",
+            "detail": "Runs the dart and riverpod analyzers",
+            "type": "shell",
+            "command": "./scripts/analyze.sh",
+            "problemMatcher": [],
+            "group": "none",
+            "dependsOn": "Build",
+            "presentation": {
+                "echo": false,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
+        },
+    ]
+}
