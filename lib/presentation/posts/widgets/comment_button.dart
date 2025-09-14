@@ -1,47 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tech_task/service/comments/comment.dart';
+import 'package:flutter_tech_task/service/comments/comment_service.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 /// Loading state-aware button that displays the current
 /// number of comments on a post.
-class CommentButton extends StatelessWidget {
+class CommentButton extends ConsumerWidget {
   const CommentButton({
-    required this.future,
+    required this.postId,
     required this.onPressed,
     super.key,
   });
 
-  /// Callback when pressed.
+  /// Callback to collect the loaded comments for navigation.
   ///
-  /// Disabled when [future] has not completed.
-  final Function() onPressed;
+  /// Disabled when in a loading or error state.
+  final Function(List<Comment>) onPressed;
 
-  /// The loading state of the comments.
-  final AsyncValue<List<Comment>> future;
+  // The post to load comment state for.
+  final int postId;
 
   @override
-  Widget build(BuildContext context) {
-    // Get the number of comments (if known).
-    int? count = future.value?.length;
-
-    // Enable only when the we have valid data.
-    bool enabled = future is AsyncData;
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO reduce code-rep without making something ugly that breaks riverpod!
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 300),
-      child: TextButton.icon(
-        onPressed: enabled ? onPressed : null,
-        label: Text('Comments ${count != null ? '($count)' : '     '}'),
-        icon: switch (future) {
-          AsyncData() => Icon(Icons.comment),
-          AsyncLoading() => LoadingAnimationWidget.progressiveDots(
-            color: Theme.of(context).primaryColor,
-            size: 20,
+      child: ref
+          .watch(commentServiceProvider(postId))
+          .when(
+            data: (comments) => TextButton.icon(
+              key: UniqueKey(),
+              onPressed: () => onPressed(comments),
+              icon: Icon(Icons.comment),
+              label: Text('Comments (${comments.length})'),
+            ),
+            error: (_, _) => TextButton.icon(
+              key: UniqueKey(),
+              onPressed: null,
+              icon: Icon(Icons.comments_disabled),
+              label: Text('Comments (0)'),
+            ),
+            loading: () => TextButton.icon(
+              key: UniqueKey(),
+              onPressed: () {},
+              icon: Icon(Icons.comment),
+              label: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Comments'),
+                  SizedBox(width: 8),
+                  LoadingAnimationWidget.progressiveDots(
+                    color: Theme.of(context).primaryColor,
+                    size: 30,
+                  ),
+                ],
+              ),
+            ),
           ),
-          AsyncError() => Icon(Icons.comments_disabled),
-        },
-      ),
     );
   }
 }
