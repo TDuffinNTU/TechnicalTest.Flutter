@@ -1,42 +1,37 @@
-import 'package:flutter_tech_task/repository/data_sources/database/api_client.dart';
-import 'package:flutter_tech_task/repository/data_sources/database/api_controller.dart';
+import 'package:flutter_tech_task/repository/data_sources/api/api_client.dart';
+import 'package:flutter_tech_task/repository/data_sources/api/api_controller.dart';
+import 'package:flutter_tech_task/repository/data_sources/database/database.dart';
+import 'package:flutter_tech_task/repository/data_sources/database/database_controller.dart';
 import 'package:flutter_tech_task/repository/models/posts/post_model.dart';
-import 'package:flutter_tech_task/service/common/mapper_mixin.dart';
 import 'package:flutter_tech_task/service/posts/post.dart';
+import 'package:flutter_tech_task/service/posts/posts_mapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'posts_service.g.dart';
 
 @riverpod
-class PostsService extends _$PostsService with MapperMixin<Post, PostModel> {
-  @override
-  FutureOr<List<Post>> build() async {
-    final List<PostModel> posts = await ApiController(
-      client: ApiClient(),
-    ).getAllPosts();
+FutureOr<List<Post>> postsService(Ref ref) async {
+  final PostsMapper mapper = PostsMapper();
+  final DatabaseController db = DatabaseController(
+    database: await ref.watch(getDatabaseProvider.future),
+  );
+  final ApiController api = ApiController(
+    client: await ref.watch(apiClientProvider.future),
+  );
+  ref.keepAlive();
+  List<PostModel> cacheResults = [];
+  List<PostModel> apiResults = [];
 
-    return posts.map(fromRepository).toList();
-  }
+  cacheResults = await db.getPosts();
+  apiResults = await api.getAllPosts();
 
-  @override
-  Post fromRepository(PostModel post) {
-    return Post(
-      id: post.id,
-      userId: post.userId,
-      title: post.title,
-      body: post.body,
-      // Does nothing for now.
-      offline: false,
-    );
-  }
+  return mapper.fromRepositoryList(apiResults, cachedPosts: cacheResults);
+}
 
-  @override
-  PostModel toRepository(Post post) {
-    return PostModel(
-      id: post.id,
-      userId: post.userId,
-      title: post.title,
-      body: post.body,
-    );
-  }
+@riverpod
+Future<void> storePost(Ref ref, Post post) async {
+  final PostsMapper mapper = PostsMapper();
+  await DatabaseController(
+    database: await ref.watch(getDatabaseProvider.future),
+  ).storePost(mapper.toRepository(post));
 }

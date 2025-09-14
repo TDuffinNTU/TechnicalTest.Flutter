@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tech_task/presentation/posts/widgets/comment_button.dart';
+import 'package:flutter_tech_task/presentation/posts/widgets/save_post_button.dart';
 import 'package:flutter_tech_task/service/posts/post.dart';
 
 class DetailsPage extends ConsumerWidget {
@@ -32,11 +33,17 @@ class DetailsPage extends ConsumerWidget {
             Text(post.body, style: const TextStyle(fontSize: 16)),
             Align(
               alignment: AlignmentGeometry.centerRight,
-              child: CommentButton(
-                postId: post.id,
-                onPressed: (comments) => Navigator.of(
-                  context,
-                ).pushNamed('comments/', arguments: comments),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CommentButton(
+                    postId: post.id,
+                    onPressed: (comments) => Navigator.of(
+                      context,
+                    ).pushNamed('comments/', arguments: comments),
+                  ),
+                  SavePostButton(post: post, disabled: false),
+                ],
               ),
             ),
           ],

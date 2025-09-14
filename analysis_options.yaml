@@ -17,5 +17,5 @@ analyzer:
 
 linter:
   rules:
-  - avoid_dynamic_calls: false  
+  - avoid_dynamic_calls: true  
   - public_member_api_docs: false

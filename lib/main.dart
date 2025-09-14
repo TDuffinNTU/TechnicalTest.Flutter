@@ -4,8 +4,25 @@ import 'package:flutter_tech_task/presentation/comments/screens/comment_screen.d
 import 'package:flutter_tech_task/presentation/home/screens/home_screen.dart';
 import 'package:flutter_tech_task/presentation/posts/screens/post_details_screen.dart';
 
+// A basic logger, which logs any state changes.
+final class Logger extends ProviderObserver {
+  @override
+  void didUpdateProvider(
+    ProviderObserverContext context,
+    Object? previousValue,
+    Object? newValue,
+  ) {
+    print('''
+{
+  "provider": "${context.provider}",
+  "newValue": "${newValue.runtimeType}",
+  "mutation": "${context.mutation}"
+}''');
+  }
+}
+
 void main() {
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(ProviderScope(child: const MyApp(), observers: [Logger()]));
 }
 
 class MyApp extends StatelessWidget {

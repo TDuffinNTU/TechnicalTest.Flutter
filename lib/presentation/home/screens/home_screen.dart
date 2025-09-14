@@ -8,20 +8,22 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final posts = ref.watch(postsServiceProvider);
+
     return Scaffold(
       appBar: AppBar(title: const Text('List of posts')),
       body: Center(
-        child: ref
-            .watch(postsServiceProvider)
-            .when(
+        child: Builder(
+          builder: (context) {
+            return posts.when(
               error: (error, _) => ErrorWidget(error),
               loading: () => CircularProgressIndicator(),
-              data: (posts) => ListView(
-                children: posts
-                    .map((post) => PostListItem(post: post))
-                    .toList(),
+              data: (posts) => ListView.builder(
+                itemBuilder: (_, index) => PostListItem(post: posts[index]),
               ),
-            ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,8 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_tech_task/repository/models/comments/comment_model.dart';
-import 'package:flutter_tech_task/repository/data_sources/database/api_client.dart';
+import 'package:flutter_tech_task/repository/data_sources/api/api_client.dart';
 import 'package:flutter_tech_task/repository/common/response_parsers.dart';
 import 'package:flutter_tech_task/repository/models/posts/post_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+// part 'api_controller.g.dart';
 
 /// JsonPlaceholder API Controller.
 class ApiController {

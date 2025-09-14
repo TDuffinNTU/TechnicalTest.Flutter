@@ -23,41 +23,36 @@ class CommentButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO reduce code-rep without making something ugly that breaks riverpod!
-    return AnimatedSwitcher(
-      duration: Duration(milliseconds: 300),
-      child: ref
-          .watch(commentServiceProvider(postId))
-          .when(
-            data: (comments) => TextButton.icon(
-              key: UniqueKey(),
-              onPressed: () => onPressed(comments),
-              icon: Icon(Icons.comment),
-              label: Text('Comments (${comments.length})'),
+    final comments = ref.watch(commentServiceProvider(postId, false));
+    return comments.when(
+      data: (data) => TextButton.icon(
+        key: UniqueKey(),
+        onPressed: () => onPressed(data),
+        icon: Icon(Icons.comment),
+        label: Text('Comments (${data.length})'),
+      ),
+      error: (_, _) => TextButton.icon(
+        key: UniqueKey(),
+        onPressed: null,
+        icon: Icon(Icons.comments_disabled),
+        label: Text('Comments (0)'),
+      ),
+      loading: () => TextButton.icon(
+        key: UniqueKey(),
+        onPressed: () {},
+        icon: Icon(Icons.comment),
+        label: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Comments'),
+            SizedBox(width: 8),
+            LoadingAnimationWidget.progressiveDots(
+              color: Theme.of(context).primaryColor,
+              size: 30,
             ),
-            error: (_, _) => TextButton.icon(
-              key: UniqueKey(),
-              onPressed: null,
-              icon: Icon(Icons.comments_disabled),
-              label: Text('Comments (0)'),
-            ),
-            loading: () => TextButton.icon(
-              key: UniqueKey(),
-              onPressed: () {},
-              icon: Icon(Icons.comment),
-              label: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Comments'),
-                  SizedBox(width: 8),
-                  LoadingAnimationWidget.progressiveDots(
-                    color: Theme.of(context).primaryColor,
-                    size: 30,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          ],
+        ),
+      ),
     );
   }
 }

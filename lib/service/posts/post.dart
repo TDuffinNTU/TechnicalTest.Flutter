@@ -14,4 +14,12 @@ abstract class Post with _$Post {
     /// Offline posts are stored in the local repository.
     bool? offline,
   }) = _Post;
+
+  Post._();
+
+  @override
+  operator ==(Object other) => other is Post && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
