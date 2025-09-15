@@ -24,6 +24,7 @@ class ApiClient {
   // Imagine there are post/put/patch etc. here!
 }
 
+/// Singleton instance of our client.
 @Riverpod(keepAlive: true)
 FutureOr<ApiClient> apiClient(Ref ref) {
   return ApiClient();

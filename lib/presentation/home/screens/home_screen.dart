@@ -12,17 +12,15 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('List of posts')),
+
       body: Center(
-        child: Builder(
-          builder: (context) {
-            return switch (posts) {
-              AsyncData(:final value) => ListView.builder(
-                itemBuilder: (_, index) => PostListItem(post: value[index]),
-              ),
-              AsyncError(:final error) => ErrorWidget(error),
-              AsyncLoading() => CircularProgressIndicator(),
-            };
-          },
+        child: posts.when(
+          data: (data) => ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (_, index) => PostListItem(post: data[index]),
+          ),
+          error: (error, _) => ErrorWidget(error),
+          loading: () => CircularProgressIndicator(),
         ),
       ),
     );

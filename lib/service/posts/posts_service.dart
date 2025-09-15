@@ -10,29 +10,47 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'posts_service.g.dart';
 
 @riverpod
-FutureOr<List<Post>> postsService(Ref ref) async {
+class PostsService extends _$PostsService {
   final PostsMapper mapper = PostsMapper();
-  final DatabaseController db = DatabaseController(
-    database: await ref.watch(getDatabaseProvider.future),
-  );
-  final ApiController api = ApiController(
-    client: await ref.watch(apiClientProvider.future),
-  );
-  ref.keepAlive();
-  List<PostModel> cacheResults = [];
-  List<PostModel> apiResults = [];
 
-  cacheResults = await db.getPosts();
-  apiResults = await api.getAllPosts();
+  @override
+  FutureOr<List<Post>> build() async {
+    final DatabaseController db = DatabaseController(
+      database: await ref.watch(getDatabaseProvider.future),
+    );
+    final ApiController api = ApiController(
+      client: await ref.watch(apiClientProvider.future),
+    );
+    List<PostModel> cacheResults = [];
+    List<PostModel> apiResults = [];
 
-  return mapper.fromRepositoryList(apiResults, cachedPosts: cacheResults);
-}
+    cacheResults = await db.getPosts();
+    apiResults = await api.getAllPosts();
 
-@riverpod
-Future<void> storePost(Ref ref, Post post) async {
-  final PostsMapper mapper = PostsMapper();
-  await DatabaseController(
-    database: await ref.watch(getDatabaseProvider.future),
-  ).storePost(mapper.toRepository(post));
-  ref.invalidate(postsServiceProvider);
+    return mapper.fromRepositoryList(apiResults, cachedPosts: cacheResults);
+  }
+
+  /// Stores a post on the datbase.
+  Future<void> togglePostOffline(Post post) async {
+    final List<Post> oldState = await future;
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(() async {
+      final DatabaseController db = await ref.read(
+        getDatabaseControllerProvider.future,
+      );
+
+      if (post.offline ?? false) {
+        await db.storePost(mapper.toRepository(post.copyWith(offline: true)));
+      } else {
+        await db.deletePost(mapper.toRepository(post));
+      }
+
+      return oldState
+          .map(
+            (e) => e == post ? e.copyWith(offline: !(e.offline ?? false)) : e,
+          )
+          .toList();
+    });
+  }
 }

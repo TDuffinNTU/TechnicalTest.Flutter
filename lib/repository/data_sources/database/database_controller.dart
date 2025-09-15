@@ -1,9 +1,11 @@
+import 'package:flutter_tech_task/repository/data_sources/database/database.dart';
 import 'package:flutter_tech_task/repository/models/comments/comment_model.dart';
 import 'package:flutter_tech_task/repository/models/posts/post_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sembast/sembast_io.dart';
 import 'package:sembast/utils/value_utils.dart';
 
-// part 'database_controller.g.dart';
+part 'database_controller.g.dart';
 
 class DatabaseController {
   DatabaseController({required this.database})
@@ -16,6 +18,10 @@ class DatabaseController {
 
   Future<void> storePost(PostModel post) async {
     await postStore.record(post.id).put(database, post.toJson());
+  }
+
+  Future<void> deletePost(PostModel post) async {
+    await postStore.record(post.id).delete(database);
   }
 
   Future<void> storeComments(List<CommentModel> comments) async {
@@ -39,4 +45,11 @@ class DatabaseController {
 
     return records.map((e) => PostModel.fromJson(cloneMap(e.value))).toList();
   }
+}
+
+@riverpod
+FutureOr<DatabaseController> getDatabaseController(Ref ref) async {
+  return DatabaseController(
+    database: await ref.watch(getDatabaseProvider.future),
+  );
 }

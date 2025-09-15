@@ -42,7 +42,12 @@ class DetailsPage extends ConsumerWidget {
                       context,
                     ).pushNamed('comments/', arguments: comments),
                   ),
-                  SavePostButton(post: post, disabled: false),
+                  SavePostButton(post: post),
+                  TextButton(
+                    onPressed: () =>
+                        (Navigator.of(context).pushNamed('saved/')),
+                    child: Text('hello'),
+                  ),
                 ],
               ),
             ),
