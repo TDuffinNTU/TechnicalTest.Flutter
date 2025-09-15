@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tech_task/presentation/comments/screens/comment_screen.dart';
@@ -12,7 +14,7 @@ final class Logger extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
   ) {
-    print('''
+    log('''
 {
   "provider": "${context.provider}",
   "newValue": "${newValue.runtimeType}",
@@ -22,7 +24,7 @@ final class Logger extends ProviderObserver {
 }
 
 void main() {
-  runApp(ProviderScope(child: const MyApp(), observers: [Logger()]));
+  runApp(ProviderScope(observers: [Logger()], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

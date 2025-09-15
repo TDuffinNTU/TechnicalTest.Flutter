@@ -15,13 +15,13 @@ class HomeScreen extends ConsumerWidget {
       body: Center(
         child: Builder(
           builder: (context) {
-            return posts.when(
-              error: (error, _) => ErrorWidget(error),
-              loading: () => CircularProgressIndicator(),
-              data: (posts) => ListView.builder(
-                itemBuilder: (_, index) => PostListItem(post: posts[index]),
+            return switch (posts) {
+              AsyncData(:final value) => ListView.builder(
+                itemBuilder: (_, index) => PostListItem(post: value[index]),
               ),
-            );
+              AsyncError(:final error) => ErrorWidget(error),
+              AsyncLoading() => CircularProgressIndicator(),
+            };
           },
         ),
       ),

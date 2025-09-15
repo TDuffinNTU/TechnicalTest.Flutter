@@ -1,6 +1,5 @@
 import 'package:flutter_tech_task/repository/data_sources/api/api_client.dart';
 import 'package:flutter_tech_task/repository/data_sources/api/api_controller.dart';
-import 'package:flutter_tech_task/repository/data_sources/database/database_controller.dart';
 import 'package:flutter_tech_task/repository/models/comments/comment_model.dart';
 import 'package:flutter_tech_task/service/comments/comment.dart';
 import 'package:flutter_tech_task/service/comments/comment_mapper.dart';

@@ -34,4 +34,5 @@ Future<void> storePost(Ref ref, Post post) async {
   await DatabaseController(
     database: await ref.watch(getDatabaseProvider.future),
   ).storePost(mapper.toRepository(post));
+  ref.invalidate(postsServiceProvider);
 }

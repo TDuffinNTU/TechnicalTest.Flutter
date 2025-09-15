@@ -24,20 +24,21 @@ class CommentButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final comments = ref.watch(commentServiceProvider(postId, false));
-    return comments.when(
-      data: (data) => TextButton.icon(
+
+    return switch (comments) {
+      AsyncData(:final value) => TextButton.icon(
         key: UniqueKey(),
-        onPressed: () => onPressed(data),
+        onPressed: () => onPressed(value),
         icon: Icon(Icons.comment),
-        label: Text('Comments (${data.length})'),
+        label: Text('Comments (${value.length})'),
       ),
-      error: (_, _) => TextButton.icon(
+      AsyncError() => TextButton.icon(
         key: UniqueKey(),
         onPressed: null,
         icon: Icon(Icons.comments_disabled),
         label: Text('Comments (0)'),
       ),
-      loading: () => TextButton.icon(
+      AsyncLoading() => TextButton.icon(
         key: UniqueKey(),
         onPressed: () {},
         icon: Icon(Icons.comment),
@@ -53,6 +54,6 @@ class CommentButton extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    };
   }
 }
